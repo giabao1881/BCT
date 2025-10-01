@@ -1,105 +1,353 @@
-<!doctype html><html lang="vi"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Admin Links</title>
-<style>
-  :root{--bg:#0b1220;--surface:#0f172a;--text:#e6edf3;--muted:#9fb0c2;--border:#1f2937;--radius:16px}
-  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.6 system-ui,Segoe UI,Inter,Roboto,Arial}
-  .wrap{width:min(900px,94vw);margin:22px auto}
-  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
-  label{font-weight:700;font-size:12px;color:var(--muted)} input,select,textarea{width:100%;padding:10px;border:1px solid var(--border);border-radius:12px;background:#0b1220;color:var(--text)}
-  textarea{min-height:90px} .row{display:grid;grid-template-columns:1fr 1fr;gap:10px} .btns{display:flex;gap:10px;margin-top:12px}
-  button{border:1px solid var(--border);background:#101a31;color:var(--text);padding:10px 14px;border-radius:12px;font-weight:800;cursor:pointer}
-  .item{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:10px;border:1px dashed var(--border);border-radius:12px;margin-bottom:10px}
-  .badge{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-weight:900;background:#1e293b}
-</style></head><body>
-<div class="wrap">
-  <div class="card" id="gate">
-    <b>Enter password</b>
-    <input id="pw" type="password" placeholder="••••••" style="margin-top:8px">
-    <div class="btns"><button onclick="unlock()">Unlock</button></div>
-    <div id="err" style="color:#fca5a5;margin-top:8px"></div>
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Admin • Links/Notes (Deluxe)</title>
+  <meta name="color-scheme" content="dark light"/>
+  <style>
+    :root{
+      --bg:#0b1220; --surface:#0f172a; --surface-2:#0c1427; --text:#e6edf3; --muted:#9fb0c2; --border:#1e293b;
+      --brand:#60a5fa; --brand-2:#34d399; --radius:16px; --shadow:0 18px 50px rgba(0,0,0,.35);
+      --chip-bg:#142544; --chip-fg:#a5c7ff; --link:#93c5fd;
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f7fafc; --surface:#ffffff; --surface-2:#f2f6fb; --text:#0b1320; --muted:#5b677a; --border:#e7edf3; --shadow:0 18px 50px rgba(17,24,39,.08); --chip-bg:#eef2ff; --chip-fg:#4338ca; --link:#1d4ed8 }
+    }
+    :root[data-theme="light"]{ --bg:#f7fafc; --surface:#ffffff; --surface-2:#f2f6fb; --text:#0b1320; --muted:#5b677a; --border:#e7edf3; --shadow:0 18px 50px rgba(17,24,39,.08); --chip-bg:#eef2ff; --chip-fg:#4338ca; --link:#1d4ed8 }
+    :root[data-theme="dark"]{ --bg:#0b1220; --surface:#0f172a; --surface-2:#0c1427; --text:#e6edf3; --muted:#9fb0c2; --border:#1e293b; --shadow:0 18px 50px rgba(0,0,0,.35); --chip-bg:#142544; --chip-fg:#a5c7ff; --link:#93c5fd }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Arial}
+
+    .container{width:min(1120px,92vw);margin:22px auto}
+    .hero{position:relative;padding:22px 0 12px}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),var(--brand-2));box-shadow:0 10px 22px rgba(96,165,250,.35)}
+    .title{margin:0;font-size:26px;font-weight:900}
+    .subtitle{margin:6px 0 0;color:var(--muted)}
+
+    .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+    .btn{border:1px solid var(--border);background:var(--surface-2);color:var(--text);padding:10px 14px;border-radius:12px;font-weight:800;cursor:pointer}
+    .btn.primary{background:linear-gradient(135deg,#3b82f6,#60a5fa);border-color:rgba(59,130,246,.35);color:#fff;box-shadow:0 8px 18px rgba(59,130,246,.35)}
+    .btn.ghost{background:transparent}
+
+    .toggle{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer}
+    .knob{width:38px;height:22px;border-radius:999px;border:1px solid var(--border);position:relative;background:linear-gradient(180deg,#0b1220,#111827)}
+    :root[data-theme="light"] .knob{background:linear-gradient(180deg,#f8fafc,#e5e7eb)}
+    .knob::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:transform .25s ease}
+    :root[data-theme="light"] .knob::after{transform:translateX(16px)}
+
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .row3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}
+    label{font-weight:800;font-size:12px;color:var(--muted)}
+    input,textarea,select{width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--surface-2);color:var(--text);outline:none}
+    textarea{min-height:100px}
+
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+    .chip{padding:8px 12px;border-radius:999px;border:1px solid var(--border);cursor:pointer;font-weight:800;background:var(--surface-2)}
+    .chip.active{outline:2px solid var(--brand);}
+
+    .icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:8px;margin-top:8px}
+    .icon-btn{height:44px;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);display:grid;place-items:center;font-size:20px;cursor:pointer}
+    .icon-btn.active{outline:2px solid var(--brand)}
+
+    .list{margin-top:14px}
+    .item{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;border:1px dashed var(--border);border-radius:14px;padding:12px;margin-bottom:10px;background:var(--surface-2)}
+    .badge{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#1e293b;color:#fff;font-weight:900}
+    :root[data-theme="light"] .badge{background:#e5efff;color:#1d4ed8}
+
+    .op{display:flex;gap:8px}
+
+    .preview{margin-top:14px;padding:16px;border:1px dashed var(--border);border-radius:14px;background:var(--surface-2)}
+    .preview .btn{pointer-events:none}
+
+    .foot{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+
+    a{color:var(--link)}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <div class="brand">
+        <div class="logo">⚙️</div>
+        <div>
+          <h1 class="title">Admin • Thêm mục/link/ghi chú</h1>
+          <p class="subtitle">Hiện đại • có icon • palette màu • import/export JSON • kéo-thả sắp xếp</p>
+        </div>
+      </div>
+      <div class="toolbar">
+        <button class="btn ghost" id="btnLoad">⬆️ Nhập JSON</button>
+        <button class="btn" id="btnCopy">📋 Copy JSON</button>
+        <button class="btn primary" id="btnExport">⬇️ Xuất JSON</button>
+        <label class="toggle" style="margin-left:auto">
+          <span>Theme</span>
+          <span class="knob"></span>
+        </label>
+        <input id="file" type="file" accept="application/json" hidden/>
+      </div>
+    </header>
+
+    <section class="card" id="gate">
+      <b>Nhập mật khẩu để vào Admin</b>
+      <div class="row" style="margin-top:8px">
+        <div><label>Mật khẩu</label><input id="pw" type="password" placeholder="••••••"/></div>
+        <div><label>&nbsp;</label><button class="btn primary" id="unlock">Mở khóa</button></div>
+      </div>
+      <p id="gateErr" style="color:#fca5a5;margin:6px 0 0"></p>
+    </section>
+
+    <section id="app" style="display:none">
+      <div class="card">
+        <div class="row3">
+          <div>
+            <label>Tiêu đề</label>
+            <input id="title" placeholder="Ví dụ: Bảng kê tính lãi"/>
+          </div>
+          <div>
+            <label>Nhãn nút</label>
+            <input id="buttonText" placeholder="📄 Mở file"/>
+          </div>
+          <div>
+            <label>Màu nút</label>
+            <div class="chips" id="colorChips" aria-label="Chọn màu">
+              <div class="chip" data-val="blue">Blue</div>
+              <div class="chip" data-val="green">Green</div>
+              <div class="chip" data-val="amber">Amber</div>
+              <div class="chip" data-val="violet">Violet</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+          <div>
+            <label>Liên kết (URL)</label>
+            <input id="href" placeholder="https://..."/>
+          </div>
+          <div>
+            <label>Chọn icon</label>
+            <div class="icon-grid" id="iconGrid" aria-label="Chọn icon">
+              <!-- icon options -->
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:10px">
+          <label>Ghi chú</label>
+          <textarea id="note" placeholder="Ví dụ: Nhập số định dạng 0,00% hoặc link: https://…"></textarea>
+        </div>
+
+        <div class="foot">
+          <button class="btn" id="btnAdd">➕ Thêm</button>
+          <button class="btn ghost" id="btnClear">🧹 Xóa hết bản nháp</button>
+        </div>
+
+        <div class="preview" id="preview">
+          <b>Preview</b>
+          <div style="display:flex;gap:12px;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap">
+            <div>
+              <div style="font-weight:900" id="p-title">(Tiêu đề)</div>
+              <div style="color:var(--muted);margin-top:6px" id="p-note">(Ghi chú)</div>
+            </div>
+            <a class="btn" id="p-btn">Mở</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card list" id="list"></div>
+    </section>
   </div>
 
-  <div class="card" id="app" style="display:none">
-    <h2>Admin • Thêm mục/link/ghi chú</h2>
-    <div class="row">
-      <div><label>Tiêu đề</label><input id="title"></div>
-      <div><label>Nhãn nút</label><input id="buttonText" placeholder="📄 Mở file"></div>
-    </div>
-    <div class="row">
-      <div><label>Liên kết (URL)</label><input id="href" placeholder="https://..."></div>
-      <div><label>Màu (blue/green/amber/violet)</label><input id="color" placeholder="blue"></div>
-    </div>
-    <div><label>Ghi chú</label><textarea id="note"></textarea></div>
-    <div class="btns">
-      <button onclick="addItem()">➕ Thêm</button>
-      <button onclick="exportJson()">⬇️ Xuất JSON</button>
-      <button onclick="importJson()">⬆️ Nhập JSON</button>
-      <input id="file" type="file" accept="application/json" style="display:none">
-    </div>
-  </div>
+  <script>
+    /* ======== THEME ======== */
+    (function(){
+      const root=document.documentElement;
+      const saved=localStorage.getItem('admin_theme');
+      if(saved) root.setAttribute('data-theme', saved);
+      document.querySelector('.toggle').addEventListener('click',()=>{
+        const cur=root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+        const next=cur==='light'?'dark':'light';
+        root.setAttribute('data-theme', next);
+        localStorage.setItem('admin_theme', next);
+      });
+    })();
 
-  <div class="card" id="list" style="display:none"></div>
-</div>
-<script>
-  const PASSWORD = 'Bao@2025'; // đổi chuỗi này
-  const LS = 'links_admin_draft';
-  let items = JSON.parse(localStorage.getItem(LS) || '[]');
+    /* ======== PASSWORD GATE (đổi mật khẩu tại đây) ======== */
+    const PASSWORD = 'Bao@2025'; // <-- ĐỔI CHUỖI NÀY
+    document.getElementById('unlock').addEventListener('click',()=>{
+      const ok = document.getElementById('pw').value === PASSWORD;
+      document.getElementById('gateErr').textContent = ok? '' : 'Sai mật khẩu';
+      if(!ok) return;
+      document.getElementById('gate').style.display='none';
+      document.getElementById('app').style.display='block';
+      render();
+    });
 
-  function unlock(){
-    const ok = document.getElementById('pw').value === PASSWORD;
-    if(!ok){ document.getElementById('err').textContent='Sai mật khẩu'; return; }
-    document.getElementById('gate').style.display='none';
-    document.getElementById('app').style.display='block';
-    document.getElementById('list').style.display='block';
-    render();
-  }
+    /* ======== STATE & HELPERS ======== */
+    const LS = 'links_admin_draft_v2';
+    let items = JSON.parse(localStorage.getItem(LS)||'[]');
+    let selectedColor = 'blue';
+    let selectedIcon = '';
 
-  function addItem(){
-    const g = id => document.getElementById(id).value.trim();
-    const it = { id: crypto.randomUUID(), title:g('title'), buttonText:g('buttonText')||'Mở', href:g('href'), note:g('note'), color:g('color')||'blue' };
-    if(!it.title || !it.href){ alert('Nhập Tiêu đề & URL'); return; }
-    items.push(it); persist(); render();
-    ['title','buttonText','href','note','color'].forEach(x=>document.getElementById(x).value='');
-  }
-  function persist(){ localStorage.setItem(LS, JSON.stringify(items)); }
-  function del(id){ items = items.filter(x=>x.id!==id); persist(); render(); }
-  function up(id){ const i=items.findIndex(x=>x.id===id); if(i>0){ [items[i-1],items[i]]=[items[i],items[i-1]]; persist(); render(); } }
-  function dn(id){ const i=items.findIndex(x=>x.id===id); if(i<items.length-1){ [items[i+1],items[i]]=[items[i],items[i+1]]; persist(); render(); } }
-  function edit(id){
-    const x = items.find(v=>v.id===id); if(!x) return;
-    const p = (k,v)=>{ const r = prompt(k, v??''); return r===null? v : r; };
-    x.title=p('Tiêu đề',x.title); x.buttonText=p('Nhãn nút',x.buttonText); x.href=p('URL',x.href);
-    x.note=p('Ghi chú',x.note||''); x.color=p('Màu',x.color||'blue'); persist(); render();
-  }
-  function render(){
-    const esc=s=>String(s).replace(/[&<>\"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
-    const box = document.getElementById('list');
-    if(items.length===0){ box.innerHTML='<em>Danh sách trống</em>'; return; }
-    box.innerHTML = items.map((x,i)=>`
-      <div class="item">
+    const el = id=>document.getElementById(id);
+    const esc = s=>String(s||'').replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+    const linkify = t=>esc(t).replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+
+    function persist(){ localStorage.setItem(LS, JSON.stringify(items)); }
+    function uid(){ return crypto.randomUUID ? crypto.randomUUID() : String(Date.now()+Math.random()); }
+
+    /* ======== ICON PALETTE ======== */
+    const ICONS = ['📄','📁','🔗','🧮','📊','📈','📉','📝','✅','⚙️','🧭','⏱️','💼','🏦','💡','⭐','🎯','🧷','🔒','📦','💬','📌','🗂️','🧾','🧩','🗓️','🗃️','📚','🧠','🧪'];
+    const iconGrid = el('iconGrid');
+    ICONS.forEach(ch=>{
+      const b=document.createElement('button'); b.type='button'; b.className='icon-btn'; b.textContent=ch; b.addEventListener('click',()=>selectIcon(ch,b)); iconGrid.appendChild(b);
+    });
+    function selectIcon(ch, btn){
+      selectedIcon = ch;
+      document.querySelectorAll('.icon-btn').forEach(x=>x.classList.remove('active'));
+      btn.classList.add('active');
+      updatePreview();
+    }
+
+    /* ======== COLOR CHIPS ======== */
+    document.querySelectorAll('#colorChips .chip').forEach(c=>{
+      c.addEventListener('click',()=>{
+        selectedColor=c.dataset.val;
+        document.querySelectorAll('#colorChips .chip').forEach(x=>x.classList.remove('active'));
+        c.classList.add('active');
+        updatePreview();
+      });
+    });
+    document.querySelector('#colorChips .chip').classList.add('active');
+
+    /* ======== FORM + PREVIEW ======== */
+    ['title','buttonText','href','note'].forEach(id=> el(id).addEventListener('input', updatePreview));
+    function btnStyle(color){
+      return {
+        blue: 'box-shadow:0 6px 18px rgba(37,99,235,.25); background:linear-gradient(135deg,#3b82f6,#60a5fa); color:#fff; border-color:rgba(59,130,246,.35)',
+        green:'box-shadow:0 6px 18px rgba(5,150,105,.25); background:linear-gradient(135deg,#10b981,#34d399); color:#081a12; border-color:rgba(16,185,129,.35)',
+        amber:'box-shadow:0 6px 18px rgba(245,158,11,.25); background:linear-gradient(135deg,#f59e0b,#fbbf24); color:#1a1200; border-color:rgba(245,158,11,.35)',
+        violet:'box-shadow:0 6px 18px rgba(124,58,237,.25); background:linear-gradient(135deg,#7c3aed,#a78bfa); color:#fff; border-color:rgba(124,58,237,.35)'
+      }[color] || '';
+    }
+    function updatePreview(){
+      el('p-title').innerHTML = (selectedIcon? esc(selectedIcon)+' ' : '') + esc(el('title').value || '(Tiêu đề)');
+      el('p-note').innerHTML = el('note').value ? linkify(el('note').value) : '(Ghi chú)';
+      el('p-btn').textContent = el('buttonText').value || 'Mở';
+      el('p-btn').setAttribute('style', btnStyle(selectedColor));
+    }
+    updatePreview();
+
+    /* ======== ADD ITEM ======== */
+    el('btnAdd').addEventListener('click', ()=>{
+      const item={
+        id: uid(),
+        title: el('title').value.trim(),
+        buttonText: (el('buttonText').value || 'Mở').trim(),
+        href: el('href').value.trim(),
+        note: el('note').value.trim(),
+        color: selectedColor,
+        icon: selectedIcon
+      };
+      if(!item.title || !item.href){ alert('Nhập Tiêu đề & URL'); return; }
+      try{ new URL(item.href); }catch{ if(!confirm('URL có vẻ không hợp lệ. Vẫn thêm?')) return; }
+      items.push(item); persist(); render();
+      // reset nhanh
+      el('title').value=''; el('buttonText').value=''; el('href').value=''; el('note').value=''; selectedIcon=''; document.querySelectorAll('.icon-btn').forEach(x=>x.classList.remove('active')); updatePreview();
+    });
+
+    el('btnClear').addEventListener('click',()=>{ if(confirm('Xóa toàn bộ bản nháp trên máy này?')){ items=[]; persist(); render(); }});
+
+    /* ======== LIST RENDER & ACTIONS ======== */
+    const list = el('list');
+    function render(){
+      if(!list) return;
+      if(items.length===0){ list.innerHTML='<em>Danh sách trống</em>'; return; }
+      list.innerHTML = items.map((x,i)=>tplItem(x,i)).join('');
+      enableDnD();
+    }
+
+    function tplItem(x,i){
+      return `
+      <div class="item" draggable="true" data-id="${x.id}">
         <div class="badge">${i+1}</div>
         <div>
-          <div style="font-weight:900">${esc(x.title)}</div>
-          <div style="color:#94a3b8;font-size:12px">${esc(x.href)}</div>
-          ${x.note? `<div style="margin-top:6px">${esc(x.note)}</div>`:''}
+          <div style="font-weight:900">${esc(x.icon? x.icon+ ' ' : '')}${esc(x.title)}</div>
+          <div style="font-size:12px;color:var(--muted)"><a href="${esc(x.href)}" target="_blank" rel="noopener noreferrer">${esc(x.href)}</a></div>
+          ${x.note? `<div style="margin-top:6px">${linkify(x.note)}</div>`:''}
         </div>
-        <div style="display:flex;gap:6px">
-          <button onclick="up('${x.id}')">⬆️</button>
-          <button onclick="dn('${x.id}')">⬇️</button>
-          <button onclick="edit('${x.id}')">✏️</button>
-          <button onclick="del('${x.id}')">🗑️</button>
+        <div class="op">
+          <button class="btn" onclick="up('${x.id}')">⬆️</button>
+          <button class="btn" onclick="dn('${x.id}')">⬇️</button>
+          <button class="btn" onclick="editItem('${x.id}')">✏️</button>
+          <button class="btn" onclick="delItem('${x.id}')">🗑️</button>
         </div>
-      </div>`).join('');
-  }
-  function exportJson(){
-    const blob = new Blob([JSON.stringify({version:1, updatedAt:new Date().toISOString(), items}, null, 2)],{type:'application/json'});
-    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='links.json'; a.click(); URL.revokeObjectURL(a.href);
-  }
-  function importJson(){ document.getElementById('file').click(); }
-  document.getElementById('file').addEventListener('change', async e=>{
-    const f=e.target.files[0]; if(!f) return; try{ const obj=JSON.parse(await f.text()); items=obj.items||[]; persist(); render(); alert('Đã nhập'); }catch{ alert('File không hợp lệ'); }
-    e.target.value='';
-  });
-</script>
-</body></html>
+      </div>`
+    }
+
+    window.up = id => { const i=items.findIndex(x=>x.id===id); if(i>0){ [items[i-1],items[i]]=[items[i],items[i-1]]; persist(); render(); }}
+    window.dn = id => { const i=items.findIndex(x=>x.id===id); if(i<items.length-1){ [items[i+1],items[i]]=[items[i],items[i+1]]; persist(); render(); }}
+    window.delItem = id => { if(confirm('Xóa mục này?')){ items=items.filter(x=>x.id!==id); persist(); render(); }}
+    window.editItem = id => {
+      const x = items.find(v=>v.id===id); if(!x) return;
+      const p = (k,v)=>{ const r = prompt(k, v??''); return r===null? v : r; };
+      x.title=p('Tiêu đề',x.title);
+      x.buttonText=p('Nhãn nút',x.buttonText);
+      x.href=p('URL',x.href);
+      x.note=p('Ghi chú',x.note||'');
+      x.color=p('Màu (blue/green/amber/violet)',x.color||'blue');
+      x.icon=p('Icon (có thể dán emoji, ví dụ 📄)',x.icon||'');
+      persist(); render();
+    }
+
+    /* ======== DRAG & DROP REORDER ======== */
+    function enableDnD(){
+      const els = document.querySelectorAll('.item[draggable]');
+      let dragId=null;
+      els.forEach(e=>{
+        e.addEventListener('dragstart',ev=>{ dragId=e.dataset.id; ev.dataTransfer.setData('text/plain',dragId); e.style.opacity=.6; });
+        e.addEventListener('dragend',()=>{ dragId=null; e.style.opacity=1; });
+        e.addEventListener('dragover',ev=>{ ev.preventDefault(); e.style.outline='2px dashed var(--brand)'; });
+        e.addEventListener('dragleave',()=>{ e.style.outline=''; });
+        e.addEventListener('drop',ev=>{
+          ev.preventDefault(); e.style.outline='';
+          const targetId=e.currentTarget.dataset.id;
+          if(!dragId || dragId===targetId) return;
+          const a=items.findIndex(x=>x.id===dragId), b=items.findIndex(x=>x.id===targetId);
+          const [m]=items.splice(a,1); items.splice(b,0,m);
+          persist(); render();
+        });
+      });
+    }
+
+    /* ======== IMPORT / EXPORT / COPY ======== */
+    el('btnExport').addEventListener('click',()=>{
+      const data={version:1, updatedAt:new Date().toISOString(), items};
+      const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='links.json'; a.click(); URL.revokeObjectURL(a.href);
+    });
+
+    el('btnCopy').addEventListener('click',async()=>{
+      const data={version:1, updatedAt:new Date().toISOString(), items};
+      await navigator.clipboard.writeText(JSON.stringify(data,null,2));
+      alert('Đã copy JSON vào clipboard');
+    });
+
+    el('btnLoad').addEventListener('click',()=> el('file').click());
+    el('file').addEventListener('change',async e=>{
+      const f=e.target.files[0]; if(!f) return;
+      try{ const obj=JSON.parse(await f.text()); items=Array.isArray(obj.items)?obj.items:[]; persist(); render(); alert('Đã nhập JSON'); }
+      catch{ alert('File không hợp lệ'); }
+      e.target.value='';
+    });
+
+    // Auto-render if gate is bypassed (for quick local dev)
+    if(location.hash==='#!dev'){ document.getElementById('gate').style.display='none'; document.getElementById('app').style.display='block'; render(); }
+  </script>
+</body>
+</html>
