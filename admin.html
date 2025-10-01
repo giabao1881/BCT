@@ -1,207 +1,105 @@
-<!-- =============================================
-ADMIN & DYNAMIC LINKS FOR YOUR GITHUB PAGES SITE
-By: ChatGPT — drop these two files into your repo root
-Files: admin.html  +  (patch for) index.html  + links.json (generated)
-============================================= -->
+<!doctype html><html lang="vi"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Admin Links</title>
+<style>
+  :root{--bg:#0b1220;--surface:#0f172a;--text:#e6edf3;--muted:#9fb0c2;--border:#1f2937;--radius:16px}
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.6 system-ui,Segoe UI,Inter,Roboto,Arial}
+  .wrap{width:min(900px,94vw);margin:22px auto}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+  label{font-weight:700;font-size:12px;color:var(--muted)} input,select,textarea{width:100%;padding:10px;border:1px solid var(--border);border-radius:12px;background:#0b1220;color:var(--text)}
+  textarea{min-height:90px} .row{display:grid;grid-template-columns:1fr 1fr;gap:10px} .btns{display:flex;gap:10px;margin-top:12px}
+  button{border:1px solid var(--border);background:#101a31;color:var(--text);padding:10px 14px;border-radius:12px;font-weight:800;cursor:pointer}
+  .item{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:10px;border:1px dashed var(--border);border-radius:12px;margin-bottom:10px}
+  .badge{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-weight:900;background:#1e293b}
+</style></head><body>
+<div class="wrap">
+  <div class="card" id="gate">
+    <b>Enter password</b>
+    <input id="pw" type="password" placeholder="••••••" style="margin-top:8px">
+    <div class="btns"><button onclick="unlock()">Unlock</button></div>
+    <div id="err" style="color:#fca5a5;margin-top:8px"></div>
+  </div>
 
-<!-- ========================= admin.html ========================= -->
-<!doctype html>
-<html lang="vi">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Admin • NOTE/BÁO CÁO</title>
-  <style>
-    :root{ --bg:#0b1220; --surface:#0f172a; --text:#e6edf3; --muted:#9fb0c2; --border:#1f2937; --radius:16px; --shadow:0 12px 40px rgba(0,0,0,.35);
-           --primary:#60a5fa; --green:#34d399; --amber:#fbbf24; --violet:#c4b5fd; }
-    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:15px/1.6 system-ui,Segoe UI,Roboto,Inter,Arial}
-    .wrap{width:min(900px,94vw);margin:22px auto;}
-    h1{font-size:22px;margin:0 0 10px}
-    p.m{color:var(--muted);margin:0 0 16px}
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
-    .grid{display:grid;grid-template-columns:1fr;gap:10px}
-    label{font-weight:700;font-size:12px;color:var(--muted)}
-    input,select,textarea{width:100%;padding:10px;border:1px solid var(--border);border-radius:12px;background:#0b1220;color:var(--text)}
-    textarea{min-height:90px}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-    button{border:1px solid var(--border);background:#101a31;color:var(--text);padding:10px 14px;border-radius:12px;font-weight:800;cursor:pointer}
-    button.primary{background:#0d1b34;border-color:#1d4ed8}
-    button.green{border-color:rgba(5,150,105,.45);background:#0b2a1f}
-    button.warn{border-color:#61421c;background:#1f170a}
-    .list{margin-top:14px}
-    .item{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:10px;border:1px dashed var(--border);border-radius:12px;margin-bottom:10px}
-    .badge{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-weight:900}
-    .c-blue{background:#1e3a8a} .c-green{background:#064e3b} .c-amber{background:#78350f} .c-violet{background:#3b0764}
-    a{color:#93c5fd}
-    @media (max-width:640px){.row{grid-template-columns:1fr}}
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>Admin • Thêm mục/link/ghi chú</h1>
-    <p class="m">Tạo/chỉnh danh sách mục tùy chỉnh hiển thị ở trang chủ. Cuối cùng bấm <b>Xuất JSON</b> và <b>upload</b> file <code>links.json</code> vào repo.</p>
-
-    <div class="card grid" id="form">
-      <div class="row">
-        <div>
-          <label>Tiêu đề mục</label>
-          <input id="title" placeholder="Ví dụ: Mẫu Biểu phí" />
-        </div>
-        <div>
-          <label>Nhãn nút</label>
-          <input id="buttonText" placeholder="Ví dụ: 📄 Mở file" />
-        </div>
-      </div>
-      <div class="row">
-        <div>
-          <label>Liên kết (URL)</label>
-          <input id="href" placeholder="https://..." />
-        </div>
-        <div>
-          <label>Màu (nhóm)</label>
-          <select id="color">
-            <option value="blue">Xanh dương</option>
-            <option value="green">Xanh lá</option>
-            <option value="amber">Vàng</option>
-            <option value="violet">Tím</option>
-          </select>
-        </div>
-      </div>
-      <div>
-        <label>Ghi chú (tuỳ chọn)</label>
-        <textarea id="note" placeholder="Hướng dẫn ngắn, lưu ý định dạng, v.v."></textarea>
-      </div>
-      <div class="btns">
-        <button class="primary" onclick="addItem()">➕ Thêm vào danh sách</button>
-        <button onclick="resetForm()">🧹 Xoá form</button>
-      </div>
+  <div class="card" id="app" style="display:none">
+    <h2>Admin • Thêm mục/link/ghi chú</h2>
+    <div class="row">
+      <div><label>Tiêu đề</label><input id="title"></div>
+      <div><label>Nhãn nút</label><input id="buttonText" placeholder="📄 Mở file"></div>
     </div>
-
-    <div class="card list" id="list"></div>
-
-    <div class="card">
-      <div class="btns">
-        <button class="green" onclick="exportJson()">⬇️ Xuất JSON (links.json)</button>
-        <button onclick="copyJson()">📋 Copy JSON</button>
-        <button onclick="importJsonFile()">⬆️ Nhập JSON từ file</button>
-        <input type="file" id="fileInput" accept="application/json" style="display:none" />
-        <a href="./index.html" target="_blank" style="margin-left:auto">👀 Xem trang chủ</a>
-      </div>
-      <p class="m">Dữ liệu đang lưu tạm trong <b>trình duyệt</b> (localStorage) để bạn chỉnh sửa thoải mái trên điện thoại. Khi xong, <b>Xuất JSON</b> rồi <b>Upload</b> file đó lên GitHub (cùng thư mục với <code>index.html</code>).</p>
+    <div class="row">
+      <div><label>Liên kết (URL)</label><input id="href" placeholder="https://..."></div>
+      <div><label>Màu (blue/green/amber/violet)</label><input id="color" placeholder="blue"></div>
+    </div>
+    <div><label>Ghi chú</label><textarea id="note"></textarea></div>
+    <div class="btns">
+      <button onclick="addItem()">➕ Thêm</button>
+      <button onclick="exportJson()">⬇️ Xuất JSON</button>
+      <button onclick="importJson()">⬆️ Nhập JSON</button>
+      <input id="file" type="file" accept="application/json" style="display:none">
     </div>
   </div>
 
+  <div class="card" id="list" style="display:none"></div>
+</div>
 <script>
-  const LS_KEY = 'links_admin_draft_v1';
-  let items = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+  const PASSWORD = 'Bao@2025'; // đổi chuỗi này
+  const LS = 'links_admin_draft';
+  let items = JSON.parse(localStorage.getItem(LS) || '[]');
 
-  function gid(id){ return document.getElementById(id); }
-  function resetForm(){ gid('title').value = ''; gid('buttonText').value=''; gid('href').value=''; gid('note').value=''; gid('color').value='blue'; }
+  function unlock(){
+    const ok = document.getElementById('pw').value === PASSWORD;
+    if(!ok){ document.getElementById('err').textContent='Sai mật khẩu'; return; }
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').style.display='block';
+    document.getElementById('list').style.display='block';
+    render();
+  }
 
   function addItem(){
-    const title = gid('title').value.trim();
-    const buttonText = gid('buttonText').value.trim() || 'Mở';
-    const href = gid('href').value.trim();
-    const note = gid('note').value.trim();
-    const color = gid('color').value;
-    if(!title || !href){ alert('Vui lòng nhập Tiêu đề và Liên kết'); return; }
-    items.push({ id: crypto.randomUUID(), title, buttonText, href, note, color });
-    persist(); render(); resetForm();
+    const g = id => document.getElementById(id).value.trim();
+    const it = { id: crypto.randomUUID(), title:g('title'), buttonText:g('buttonText')||'Mở', href:g('href'), note:g('note'), color:g('color')||'blue' };
+    if(!it.title || !it.href){ alert('Nhập Tiêu đề & URL'); return; }
+    items.push(it); persist(); render();
+    ['title','buttonText','href','note','color'].forEach(x=>document.getElementById(x).value='');
   }
-
-  function delItem(id){ items = items.filter(x=>x.id!==id); persist(); render(); }
-  function move(id,dir){ const i = items.findIndex(x=>x.id===id); if(i<0) return; const j = dir==='up'? i-1 : i+1; if(j<0||j>=items.length) return; [items[i],items[j]]=[items[j],items[i]]; persist(); render(); }
-  function editItem(id){ const it = items.find(x=>x.id===id); if(!it) return; const t = prompt('Tiêu đề:', it.title); if(t===null) return; it.title=t; const b=prompt('Nhãn nút:', it.buttonText); if(b===null) return; it.buttonText=b; const h=prompt('Liên kết:', it.href); if(h===null) return; it.href=h; const n=prompt('Ghi chú:', it.note||''); if(n===null) return; it.note=n; const c=prompt('Màu (blue/green/amber/violet):', it.color); if(c===null) return; it.color=c; persist(); render(); }
-
-  function persist(){ localStorage.setItem(LS_KEY, JSON.stringify(items)); }
-
-  function exportJson(){
-    const data = { version:1, updatedAt: new Date().toISOString(), items };
-    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = 'links.json'; a.click(); URL.revokeObjectURL(a.href);
+  function persist(){ localStorage.setItem(LS, JSON.stringify(items)); }
+  function del(id){ items = items.filter(x=>x.id!==id); persist(); render(); }
+  function up(id){ const i=items.findIndex(x=>x.id===id); if(i>0){ [items[i-1],items[i]]=[items[i],items[i-1]]; persist(); render(); } }
+  function dn(id){ const i=items.findIndex(x=>x.id===id); if(i<items.length-1){ [items[i+1],items[i]]=[items[i],items[i+1]]; persist(); render(); } }
+  function edit(id){
+    const x = items.find(v=>v.id===id); if(!x) return;
+    const p = (k,v)=>{ const r = prompt(k, v??''); return r===null? v : r; };
+    x.title=p('Tiêu đề',x.title); x.buttonText=p('Nhãn nút',x.buttonText); x.href=p('URL',x.href);
+    x.note=p('Ghi chú',x.note||''); x.color=p('Màu',x.color||'blue'); persist(); render();
   }
-
-  function copyJson(){ navigator.clipboard.writeText(JSON.stringify({version:1, updatedAt:new Date().toISOString(), items}, null, 2)); alert('Đã copy JSON'); }
-
-  function importJsonFile(){ gid('fileInput').click(); }
-  gid('fileInput').addEventListener('change', async (e)=>{
-    const f = e.target.files[0]; if(!f) return; const txt = await f.text();
-    try{ const obj = JSON.parse(txt); items = obj.items || []; persist(); render(); alert('Đã nhập JSON'); }
-    catch(err){ alert('File không hợp lệ'); }
-    e.target.value = '';
-  });
-
   function render(){
-    const box = gid('list');
-    if(items.length===0){ box.innerHTML = '<p class="m">Danh sách trống. Thêm mục ở trên nhé.</p>'; return; }
+    const esc=s=>String(s).replace(/[&<>\"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+    const box = document.getElementById('list');
+    if(items.length===0){ box.innerHTML='<em>Danh sách trống</em>'; return; }
     box.innerHTML = items.map((x,i)=>`
       <div class="item">
-        <div class="badge c-${x.color}">${i+1}</div>
+        <div class="badge">${i+1}</div>
         <div>
-          <div style="font-weight:800">${escapeHtml(x.title)}</div>
-          <div style="font-size:12px;color:var(--muted)">${escapeHtml(x.href)}</div>
-          ${x.note? `<div style="margin-top:6px">${escapeHtml(x.note)}</div>`:''}
+          <div style="font-weight:900">${esc(x.title)}</div>
+          <div style="color:#94a3b8;font-size:12px">${esc(x.href)}</div>
+          ${x.note? `<div style="margin-top:6px">${esc(x.note)}</div>`:''}
         </div>
-        <div style="display:flex;gap:8px">
-          <button onclick="move('${x.id}','up')">⬆️</button>
-          <button onclick="move('${x.id}','down')">⬇️</button>
-          <button onclick="editItem('${x.id}')">✏️</button>
-          <button class="warn" onclick="delItem('${x.id}')">🗑️</button>
+        <div style="display:flex;gap:6px">
+          <button onclick="up('${x.id}')">⬆️</button>
+          <button onclick="dn('${x.id}')">⬇️</button>
+          <button onclick="edit('${x.id}')">✏️</button>
+          <button onclick="del('${x.id}')">🗑️</button>
         </div>
       </div>`).join('');
   }
-
-  function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
-
-  render();
+  function exportJson(){
+    const blob = new Blob([JSON.stringify({version:1, updatedAt:new Date().toISOString(), items}, null, 2)],{type:'application/json'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='links.json'; a.click(); URL.revokeObjectURL(a.href);
+  }
+  function importJson(){ document.getElementById('file').click(); }
+  document.getElementById('file').addEventListener('change', async e=>{
+    const f=e.target.files[0]; if(!f) return; try{ const obj=JSON.parse(await f.text()); items=obj.items||[]; persist(); render(); alert('Đã nhập'); }catch{ alert('File không hợp lệ'); }
+    e.target.value='';
+  });
 </script>
-</body>
-</html>
-
-
-<!-- ================== PATCH for your existing index.html ==================
-1) Add this extra <article> section where you want the custom links to appear
-   (e.g., after the KPI card). Keep your original content unchanged.
-
-  <article id="custom" class="card">
-    <h2><span class="chip">Ghi chú & Liên kết tuỳ chỉnh</span></h2>
-    <div id="custom-list"></div>
-  </article>
-
-2) Add this script block near the end of <body> (BEFORE your existing script or after; same page):
-
-  <script>
-    (async function(){
-      try{
-        const res = await fetch('./links.json', { cache: 'no-store' });
-        if(!res.ok) throw new Error('No links.json');
-        const data = await res.json();
-        const list = document.getElementById('custom-list');
-        if(!data.items || data.items.length===0){ list.innerHTML = '<p class="muted">(Chưa có mục nào — mở <a href="./admin.html" target="_blank">Admin</a> để thêm)</p>'; return; }
-        list.innerHTML = data.items.map(renderItem).join('');
-        function renderItem(x){
-          const colorClass = {blue:'blue',green:'green',amber:'amber',violet:'violet'}[x.color||'blue'];
-          return `
-            <div class="card" style="padding:16px;margin:12px 0">
-              <div style="display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap">
-                <div>
-                  <div style="font-weight:900;font-size:16px">${esc(x.title)}</div>
-                  ${x.note? `<div class="muted" style="margin-top:6px">${esc(x.note)}</div>`:''}
-                </div>
-                <a class="btn ${colorClass}" href="${esc(x.href)}" target="_blank">${esc(x.buttonText||'Mở')}</a>
-              </div>
-            </div>`
-        }
-        function esc(s){ return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
-      }catch(err){
-        const list = document.getElementById('custom-list');
-        if(list) list.innerHTML = '<p class="muted">Không tìm thấy <code>links.json</code>. Tạo bằng <a href="./admin.html" target="_blank">Admin</a>.</p>'
-      }
-    })();
-  </script>
-
-3) Place the new file admin.html in the same folder as index.html.
-4) Generate links.json from the admin and commit it next to index.html.
-================================================================== -->
+</body></html>
