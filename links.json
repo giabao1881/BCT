@@ -1,14 +1,15 @@
 {
   "version": 1,
-  "updatedAt": "2025-10-01T15:14:26.346Z",
+  "updatedAt": "2025-10-01T15:47:19.716Z",
   "items": [
     {
-      "id": "8b7b5bd8-df90-49d2-9adc-bbddb1594e40",
-      "title": "HIHI",
-      "buttonText": "Mở",
-      "href": "https://www.facebook.com/profile.php?id=100005033958343",
-      "note": "12333",
-      "color": "blue"
+      "id": "b547460b-1aac-4035-985c-a4fcd1fc1ae6",
+      "title": "Bảng kê tính lãi",
+      "buttonText": "Mở File Bảng kê Tính Lãi",
+      "href": "https://accvip.shopgvn.com/",
+      "note": "HUHU",
+      "color": "green",
+      "icon": "📊"
     }
   ]
 }
