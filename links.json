@@ -1,5 +1,14 @@
 {
   "version": 1,
-  "updatedAt": "2025-10-01T00:00:00Z",
-  "items": []
+  "updatedAt": "2025-10-01T15:14:26.346Z",
+  "items": [
+    {
+      "id": "8b7b5bd8-df90-49d2-9adc-bbddb1594e40",
+      "title": "HIHI",
+      "buttonText": "Mở",
+      "href": "https://www.facebook.com/profile.php?id=100005033958343",
+      "note": "12333",
+      "color": "blue"
+    }
+  ]
 }
