@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "updatedAt": "2025-10-01T14:00:00Z",
+  "items": [
+    {
+      "title": "Mẫu biểu phí",
+      "buttonText": "📄 Mở file",
+      "href": "https://example.com/demo.pdf",
+      "note": "Ví dụ ghi chú hiển thị dưới tiêu đề",
+      "color": "blue"
+    },
+    {
+      "title": "Kho tài liệu nội bộ",
+      "buttonText": "🔗 Truy cập",
+      "href": "https://example.com/",
+      "note": "",
+      "color": "green"
+    }
+  ]
+}
