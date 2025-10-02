@@ -1,15 +1,51 @@
 {
   "version": 1,
-  "updatedAt": "2025-10-01T15:47:19.716Z",
+  "updatedAt": "2025-10-02T03:56:35.010Z",
   "items": [
     {
-      "id": "b547460b-1aac-4035-985c-a4fcd1fc1ae6",
-      "title": "Bảng kê tính lãi",
-      "buttonText": "Mở File Bảng kê Tính Lãi",
-      "href": "https://accvip.shopgvn.com/",
-      "note": "HUHU",
+      "id": "214b7be9-84fc-403b-8f46-b3d20a6dccc0",
+      "title": "Báo cáo tiến độ hồ sơ ưu tiên thụ lý",
+      "buttonText": "📁Mở file báo cáo",
+      "href": "https://vpb-my.sharepoint.com/:x:/g/personal/baotg10_vpbank_com_vn/Eb8h3xWdjoVKpos09pv56CcBXMQRqE00_BTwj_tcz95LKw?e=iJWPQ6",
+      "note": "Anh/chị báo cáo tiến độ hồ sơ ưu tiên thụ lý trên file này nhé!",
+      "color": "amber",
+      "icon": "🗃️"
+    },
+    {
+      "id": "771e9881-dfc0-4aae-b6d2-acec6b8b9c3d",
+      "title": "Báo cáo tiến độ hồ sơ",
+      "buttonText": "📁 Mở file báo cáo",
+      "href": "https://vpb-my.sharepoint.com/:x:/g/personal/baotg10_vpbank_com_vn/EbxJwRULM99IsB198AvTS_0BPFcHQYDYFN3DQsgzcpcZ6Q?e=0LzkaO",
+      "note": "Anh/chị chọn đúng SHEET của mình và nhập liệu cho chính xác nhé",
+      "color": "amber",
+      "icon": "⏱️"
+    },
+    {
+      "id": "9fb471d4-124b-437d-b6d1-f72008227477",
+      "title": "Báo cáo tỉ lệ hoàn thành",
+      "buttonText": "📁 Mở file báo cáo",
+      "href": "https://vpb-my.sharepoint.com/:x:/g/personal/baotg10_vpbank_com_vn/Efe7-tAx3lJLpkMWWWYP2vwBDkB_OsAOBLZPTfohGkPDtQ?e=XB5wrJ",
+      "note": "Báo cáo này tự động chia theo tháng hiện tại, anh/chị nhập số cho đúng định dạng máy để ra kết quá chính xác nhất",
+      "color": "blue",
+      "icon": "🎯"
+    },
+    {
+      "id": "0464c8c7-321c-4ac0-880a-937e532ece4a",
+      "title": "TOOL Bảng kê tính lãi",
+      "buttonText": "🔗 Lấy tool tại đây",
+      "href": "https://vpb-my.sharepoint.com/:f:/g/personal/baotg10_vpbank_com_vn/EkKKNm7Bt_FEsX--ivEjRbcBwUjx7s1kSrUsl2VvGj9I6g?e=b0Dj51",
+      "note": "Tool có thể cập nhật liên tục, anh chị nhớ lên kiểm tra!",
       "color": "green",
-      "icon": "📊"
+      "icon": "🔗"
+    },
+    {
+      "id": "8a2b8187-7f64-49ce-a485-082710874c33",
+      "title": "Tính KPI",
+      "buttonText": "📁 Mở file tính KPI",
+      "href": "https://vpb-my.sharepoint.com/:x:/g/personal/baotg10_vpbank_com_vn/EaZIUMgwciBFqhxDR2VSpiMBsNdtLY8Z48Qd-O-n2C6BJQ?e=9OvDOp",
+      "note": "Anh/chị sử dụng nhớ copy ra sheet khác rồi tính cho mình nha!",
+      "color": "violet",
+      "icon": "🧮"
     }
   ]
 }
